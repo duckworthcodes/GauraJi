@@ -547,7 +547,7 @@
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 console.log("Login Successful!", userCredential.user);
                 alert("Login Successful!");
-                window.location.href = "Index.html";
+                window.location.href = "index.html";
             } catch (error) {
                 console.error(error.message);
                 if (error.code === 'auth/wrong-password') {
@@ -592,7 +592,7 @@
 
                 console.log("Registration Successful!", userCredential.user);
                 alert("Registration Successful!");
-                window.location.href = "Index.html";
+                window.location.href = "index.html";
             } catch (error) {
                 console.error(error.message);
                 if (error.code === 'auth/email-already-in-use') {
