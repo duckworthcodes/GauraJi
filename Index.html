@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Diet Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('image11.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(243, 6, 6, 0.358);
+            z-index: 1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 223, 186, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px rgba(255, 235, 59, 0.8);
+        }
+
+        p {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.8); /* Fixed background color */
+            color: white; /* Ensure text is visible */
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #ffeb3b;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff5722;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: #e64a19;
+            box-shadow: 0 0 20px rgba(255, 87, 34, 0.8);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #ffeb3b;
+        }
+
+        #downloadBtn {
+            margin-top: 10px;
+            background-color: #4caf50;
+            color: white;
+            display: none;
+        }
+
+        #downloadBtn:hover {
+            background-color: #388e3c;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <h1>FitFlow</h1>
+            <h2 style="font-size: larger;">Your Health, One Insight at a Time. </h2> 
+        <p>Get a comprehensive analysis of your diet and health</p>
+
+        <form id="dietForm">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required min="1">
+
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" name="height" required min="1">
+
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" required min="1">
+
+            <label for="dailyCalories">Daily Calories (kcal):</label>
+            <input type="number" id="dailyCalories" name="dailyCalories" required min="1">
+
+            <label for="activityLevel">Activity Level:</label>
+            <select id="activityLevel" name="activityLevel" required>
+                <option value="sedentary">Sedentary</option>
+                <option value="moderate">Moderate</option>
+                <option value="active">Active</option>
+            </select>
+
+            <label for="dietType">Diet Type:</label>
+            <select id="dietType" name="dietType" required>
+                <option value="balanced">Balanced</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="highProtein">High Protein</option>
+            </select>
+
+            <label for="goal">Your Goal:</label>
+            <select id="goal" name="goal" required>
+                <option value="maintain">Maintain Weight</option>
+                <option value="lose">Lose Weight</option>
+                <option value="gain">Gain Muscle</option>
+            </select>
+
+            <button type="submit">Analyze Diet</button>
+        </form>
+
+        <div id="result"></div>
+
+        <button id="downloadBtn">Download Report as PDF</button>
+    </div>
+
+    <script>
+        document.getElementById("dietForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get form values
+            const age = document.getElementById("age").value;
+            const height = document.getElementById("height").value;
+            const weight = document.getElementById("weight").value;
+            const activityLevel = document.getElementById("activityLevel").value;
+            const dailyCalories = document.getElementById("dailyCalories").value;
+            const goal = document.getElementById("goal").value;
+
+            // Calculate BMI
+            const heightInMeters = height / 100;
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+
+            // Calorie Recommendation based on activity level
+            let calorieRecommendation;
+            if (activityLevel === "sedentary") {
+                calorieRecommendation = (dailyCalories * 1.2).toFixed(0);
+            } else if (activityLevel === "moderate") {
+                calorieRecommendation = (dailyCalories * 1.55).toFixed(0);
+            } else if (activityLevel === "active") {
+                calorieRecommendation = (dailyCalories * 1.75).toFixed(0);
+            }
+
+            // Define message based on goal
+            let goalMessage;
+            if (goal === "maintain") {
+                goalMessage = "You're aiming to maintain your current weight.";
+            } else if (goal === "lose") {
+                goalMessage = "You're aiming to lose weight. A deficit of around 500 kcal is ideal.";
+            } else if (goal === "gain") {
+                goalMessage = "You're aiming to gain muscle. A surplus of around 500 kcal is ideal.";
+            }
+
+            // Show result
+            const resultText = `
+                Age: ${age} years<br>
+                BMI: ${bmi}<br>
+                Recommended Daily Calories: ${calorieRecommendation} kcal<br>
+                Goal: ${goalMessage}
+            `;
+            document.getElementById("result").innerHTML = resultText;
+
+            // Show download button
+            document.getElementById("downloadBtn").style.display = "block";
+        });
+
+        document.getElementById("downloadBtn").addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Capture form inputs
+            const age = document.getElementById("age").value;
+            const height = document.getElementById("height").value;
+            const weight = document.getElementById("weight").value;
+            const dailyCalories = document.getElementById("dailyCalories").value;
+            const bmi = (weight / (Math.pow(height / 100, 2))).toFixed(1);
+
+            // Prepare content for PDF
+            let content = `
+                Advanced Diet Analyzer Report
+
+                Age: ${age} years
+                Height: ${height} cm
+                Weight: ${weight} kg
+                Daily Caloric Intake: ${dailyCalories} kcal
+                BMI: ${bmi}
+
+                Activity Level: ${document.getElementById('activityLevel').value}
+                Diet Type: ${document.getElementById('dietType').value}
+                Goal: ${document.getElementById('goal').value}
+
+                Recommendations:
+                Your BMI is ${bmi}, which indicates you should follow a balanced diet with proper calorie management. 
+            `;
+
+            doc.text(content, 10, 10);
+            doc.save("Diet_Report.pdf");
+        });
+    </script>
+</body>
+
+</html>
